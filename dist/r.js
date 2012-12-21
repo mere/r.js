@@ -14363,7 +14363,7 @@ define('uglifyjs2', ['exports', 'source-map', 'logger'], function (exports, MOZ_
     var RE_OCT_NUMBER = /^0[0-7]+$/;
     var RE_DEC_NUMBER = /^\d*\.?\d*(?:e[+-]?\d*(?:\d\.?|\.?\d)\d*)?$/i;
     var OPERATORS = makePredicate([ "in", "instanceof", "typeof", "new", "void", "delete", "++", "--", "+", "-", "!", "~", "&", "|", "^", "*", "/", "%", ">>", "<<", ">>>", "<", ">", "<=", ">=", "==", "===", "!=", "!==", "?", "=", "+=", "-=", "/=", "*=", "%=", ">>=", "<<=", ">>>=", "|=", "^=", "&=", "&&", "||" ]);
-    var WHITESPACE_CHARS = makePredicate(characters("  \n\r	\f​᠎             　"));
+    var WHITESPACE_CHARS = makePredicate(characters("  \n\r	\f​᠎             　"));
     var PUNC_BEFORE_EXPRESSION = makePredicate(characters("[{(,.;:"));
     var PUNC_CHARS = makePredicate(characters("[]{}(),;:"));
     var REGEXP_MODIFIERS = makePredicate(characters("gmsiy"));
@@ -19101,9 +19101,15 @@ exports.minify = function(files, options, name) {
 
     // 2. compress
     toplevel.figure_out_scope();
-    var sq = UglifyJS.Compressor({
+    var opts = {
         warnings: options.warnings,
-    });
+    }
+    for (var key in options.compress) {
+        opts[key] = options.compress[key]
+    }
+
+    var sq = UglifyJS.Compressor(opts);
+    
     toplevel = toplevel.transform(sq);
 
     // 3. mangle
